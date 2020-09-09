@@ -15,9 +15,19 @@ namespace AngularAndNetCoreAPI.Services
 
         public Task<decimal> CalculatePremiumAsync(PremiumQuoteModel premiumQuote)
         {
+            var age = 0;
+            if (DateTime.TryParseExact(premiumQuote.DOB, "dd/MM/yyyy",
+                System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None,
+                out var value))
+            {
+                age = (DateTime.Today - value).Days / 365;
+            }
+            else
+                age = premiumQuote.Age;
+
             var rating = premiumQuote.OccupationRating >= 1 && premiumQuote.OccupationRating <= 4 ?
                 OccupationRatingFactor[premiumQuote.OccupationRating - 1] : 0;
-            var premium = (premiumQuote.Amount * rating * premiumQuote.Age) / 1000 * 12;
+            var premium = (premiumQuote.Amount * rating * age) / 1000 * 12;
             return Task.FromResult<decimal>(premium);
         }
 
