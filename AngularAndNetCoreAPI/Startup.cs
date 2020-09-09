@@ -1,3 +1,5 @@
+using AngularAndNetCoreAPI.Services;
+using AngularAndNetCoreAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,6 +28,9 @@ namespace AngularAndNetCoreAPI
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            services.AddScoped<IPremiumCalculationService, PremiumCalculationService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
