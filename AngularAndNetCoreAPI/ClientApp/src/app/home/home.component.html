@@ -1,6 +1,6 @@
 <div class="card m-3 basic-info">
-    <h5 class="card-header bg-success text-white" *ngIf="premium>0">Estimated Monthly Premium: <strong>{{ premium | currency }}</strong></h5>
-    <h5 class="card-header bg-success text-white" *ngIf="premium==0">To Calculate your Monthly Premium: enter all details below</h5>
+    <h5 class="card-header bg-success text-white" *ngIf="premium>0">Estimated Monthly Premium: <span class="badge badge-warning  text-large">{{ premium | currency }}</span></h5>
+    <h5 class="card-header bg-success text-white" *ngIf="premium==0">To Calculate your Monthly Premium enter all details below</h5>
     <div class="card-body">
         <form [formGroup]="quoteForm" (ngSubmit)="onSubmit()">
             <div class="form-row">
@@ -8,7 +8,7 @@
                     <label>Name</label>
                     <input type="text" formControlName="name" class="form-control"
                            [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
-                           maxlength="100" />
+                           maxlength="100" placeholder="Full name" />
                     <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
                         <div *ngIf="f.name.errors.required">Name is required</div>
                     </div>
@@ -23,10 +23,10 @@
                     </div>
                 </div>
                 <div class="form-group col-2">
-                    <label>DOB</label>
+                    <label>Date of birth</label>
                     <input type="text" formControlName="dob" class="form-control"
                            [ngClass]="{ 'is-invalid': submitted && f.dob.errors }"
-                           maxlength="10" />
+                           maxlength="10" placeholder="DD/MM/YYYY" />
                     <div *ngIf="submitted && f.dob.errors" class="invalid-feedback">
                         <div *ngIf="f.dob.errors.required">DOB is required</div>
                     </div>
@@ -41,7 +41,7 @@
                         <option *ngFor="let or of occupationRatings" value={{or.rating}}>
                             {{or.occupation}}
                         </option>
-                       
+
                     </select>
                     <div *ngIf="submitted && f.occupationRating.errors" class="invalid-feedback">
                         <div *ngIf="f.occupationRating.errors.required">Occupation is required</div>
@@ -49,14 +49,21 @@
                 </div>
                 <div class="form-group col-2">
                     <label>Sum Insured ($)</label>
-                    <input type="text" formControlName="amount" class="form-control"
-                           [ngClass]="{ 'is-invalid': submitted && f.amount.errors }"
-                           pattern="[0-9,]*.[0-9]{0,2}" maxlength="10" />
-                    <div *ngIf="submitted && f.amount.errors" class="invalid-feedback">
-                        <div *ngIf="f.amount.errors.required">Amount is required</div>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">$</span>
+                        </div>
+                        <input type="text" formControlName="amount" class="form-control"
+                               [ngClass]="{ 'is-invalid': submitted && f.amount.errors }"
+                               pattern="[0-9,]*.[0-9]{0,2}" maxlength="10" />
+                        <div *ngIf="submitted && f.amount.errors" class="invalid-feedback">
+                            <div *ngIf="f.amount.errors.required">Amount is required</div>
+                        </div>
                     </div>
                 </div>
             </div>
+            <p>* all fields are required</p>
+
             <div class="form-row">
                 <div class="text-center">
                     <button class="btn btn-success mr-1">Calculate Premium</button>
