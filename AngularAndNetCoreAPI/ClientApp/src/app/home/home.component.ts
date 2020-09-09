@@ -50,10 +50,7 @@ export class HomeComponent implements OnInit {
 
   onOccupationChange(e) { this.onSubmit(); }
 
-  onDobChange(e) {
-    this.calcAge(e.target.value);
-  }
-
+ 
   getOccupationRatings() {
     this.http.get<OccupationRatingModel[]>(this.baseApiUrl + 'premium').subscribe(result => {
       this.occupationRatings = result;
@@ -67,14 +64,14 @@ export class HomeComponent implements OnInit {
     params = params.append('age', this.quoteForm.get('age').value);
     params = params.append('dob', this.quoteForm.get('dob').value);
 
-    this.http.get<number>(this.baseApiUrl + 'premium/quote', { params: params }).subscribe(result => {
-      this.premium = result;
+    this.http.get<PremiumQuoteModel>(this.baseApiUrl + 'premium/quote', { params: params }).subscribe(result => {
+      this.premium = result.premium;
+      this.setAge(result.age);
     }, error => console.error(error));
   }
 
-  calcAge(dob) {
-    
-
+  setAge(age) {
+    this.quoteForm.get('age').setValue(age);
   }
 }
 
@@ -84,6 +81,7 @@ interface OccupationRatingModel {
 }
 
 interface PremiumQuoteModel {
+  premium: number;
   amount: number;
   occupationRating: number;
   age: number;

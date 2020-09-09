@@ -13,7 +13,7 @@ namespace AngularAndNetCoreAPI.Services
             1.0M, 1.25M, 1.50M, 1.75M
         };
 
-        public Task<decimal> CalculatePremiumAsync(PremiumQuoteModel premiumQuote)
+        public Task<PremiumQuoteModel> CalculatePremiumAsync(PremiumQuoteModel premiumQuote)
         {
             var age = 0;
             if (DateTime.TryParseExact(premiumQuote.DOB, "dd/MM/yyyy",
@@ -28,7 +28,11 @@ namespace AngularAndNetCoreAPI.Services
             var rating = premiumQuote.OccupationRating >= 1 && premiumQuote.OccupationRating <= 4 ?
                 OccupationRatingFactor[premiumQuote.OccupationRating - 1] : 0;
             var premium = (premiumQuote.Amount * rating * age) / 1000 * 12;
-            return Task.FromResult<decimal>(premium);
+
+            premiumQuote.Age = age;
+            premiumQuote.Premium = premium;
+
+            return Task.FromResult<PremiumQuoteModel>(premiumQuote);
         }
 
         public Task<IEnumerable<OccupationRatingModel>> GetOccupationRatingsAsync()

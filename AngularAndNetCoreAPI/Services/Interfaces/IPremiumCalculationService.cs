@@ -7,7 +7,7 @@ namespace AngularAndNetCoreAPI.Services.Interfaces
 {
     public interface IPremiumCalculationService
     {
-        public Task<decimal> CalculatePremiumAsync(PremiumQuoteModel premiumQuote);
+        public Task<PremiumQuoteModel> CalculatePremiumAsync(PremiumQuoteModel premiumQuote);
         public Task<IEnumerable<OccupationRatingModel>> GetOccupationRatingsAsync();
     }
 }
