@@ -15,7 +15,7 @@ export class HomeComponent implements OnInit {
 
   public occupationRatings: OccupationRatingModel[];
 
-  @ViewChild("sumInsured") sumInsuredField: ElementRef;
+  @ViewChild("sumInsured", { static: false }) sumInsuredField: ElementRef;
 
   constructor(private http: HttpClient,
     @Inject('BASE_URL') private baseApiUrl: string,
