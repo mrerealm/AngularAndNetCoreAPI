@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
@@ -10,16 +10,21 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 export class HomeComponent implements OnInit {
   public premium = 0;
   public quoteForm: FormGroup;
+  public loadingError = false;
   private submitted = false;
 
   public occupationRatings: OccupationRatingModel[];
 
+  @ViewChild("sumInsured") sumInsuredField: ElementRef;
+
   constructor(private http: HttpClient,
     @Inject('BASE_URL') private baseApiUrl: string,
-    private formBuilder: FormBuilder) {
+    private formBuilder: FormBuilder,
+    private el: ElementRef) {
   }
 
   ngOnInit() {
+    this.loadingError = false;
     this.quoteForm = this.formBuilder.group({
       name: ['', Validators.required],
       age: ['', Validators.required],
@@ -27,7 +32,6 @@ export class HomeComponent implements OnInit {
       occupationRating: ['', Validators.required],
       amount: ['', Validators.required],
     });
-
     this.getOccupationRatings();
   }
 
@@ -44,17 +48,28 @@ export class HomeComponent implements OnInit {
   }
 
   onReset() {
+    this.loadingError = false;
     this.submitted = false;
     this.quoteForm.reset();
+    this.premium = 0;
   }
 
-  onOccupationChange(e) { this.onSubmit(); }
+  onOccupationChange(e) {
+    this.sumInsuredField.nativeElement.focus();
+    this.premium = 0;
+    this.onSubmit();
+  }
 
- 
+  displayError(error) {
+    console.error(error)
+    this.loadingError = true;
+  }
+
   getOccupationRatings() {
-    this.http.get<OccupationRatingModel[]>(this.baseApiUrl + 'premium').subscribe(result => {
-      this.occupationRatings = result;
-    }, error => console.error(error));
+    this.http.get<OccupationRatingModel[]>(this.baseApiUrl + 'premium')
+      .subscribe(result => {
+        this.occupationRatings = result;
+      }, error => this.displayError(error));
   }
 
   calcPremium() {
@@ -64,14 +79,16 @@ export class HomeComponent implements OnInit {
     params = params.append('age', this.quoteForm.get('age').value);
     params = params.append('dob', this.quoteForm.get('dob').value);
 
-    this.http.get<PremiumQuoteModel>(this.baseApiUrl + 'premium/quote', { params: params }).subscribe(result => {
-      this.premium = result.premium;
-      this.setAge(result.age);
-    }, error => console.error(error));
+    this.http.get<PremiumQuoteModel>(this.baseApiUrl + 'premium/quote', { params: params })
+      .subscribe(result => {
+        this.premium = result.premium;
+        this.setAge(result.age);
+    }, error => this.displayError(error));
   }
 
   setAge(age) {
-    this.quoteForm.get('age').setValue(age);
+    if (this.quoteForm.get('age').value != age)
+      this.quoteForm.get('age').setValue(age);
   }
 }
 
