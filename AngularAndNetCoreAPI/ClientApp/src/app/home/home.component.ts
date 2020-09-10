@@ -15,6 +15,7 @@ export class HomeComponent implements OnInit {
 
   public occupationRatings: OccupationRatingModel[];
 
+  @ViewChild("fullName", { static: false }) fullNameField: ElementRef;
   @ViewChild("sumInsured", { static: false }) sumInsuredField: ElementRef;
 
   constructor(private http: HttpClient,
@@ -32,8 +33,11 @@ export class HomeComponent implements OnInit {
       occupationRating: ['', Validators.required],
       amount: ['', Validators.required],
     });
+    
     this.getOccupationRatings();
   }
+
+  ngAfterViewInit() { this.fullNameField.nativeElement.focus(); }
 
   get f() { return this.quoteForm.controls; }
 

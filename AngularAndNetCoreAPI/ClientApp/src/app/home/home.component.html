@@ -6,7 +6,7 @@
             <div class="form-row">
                 <div class="form-group col-5">
                     <label>Name</label>
-                    <input type="text" formControlName="name" class="form-control"
+                    <input #fullName type="text" formControlName="name" class="form-control"
                            [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
                            maxlength="100" placeholder="Full name" />
                     <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
@@ -63,13 +63,13 @@
                 </div>
             </div>
             <p>* all fields are required</p>
-            <div class="alert alert-danger" style="width:400px;" *ngIf="loadingError">Failed to calculate, please refresh page</div>
 
             <div class="form-row" style="margin-bottom:70px;">
                 <div class="text-center">
                     <button class="btn btn-success mr-1">Calculate Premium</button>
                     <button class="btn btn-secondary" type="reset" (click)="onReset()">Clear Form</button>
                 </div>
+                <span class="alert alert-danger p-1 left10" *ngIf="loadingError"><small>Failed to calculate, please refresh page</small></span>
             </div>
         </form>
     </div>
