@@ -13,6 +13,7 @@ Basic solution from VisualStudio 2019 Angular/.Netcore template
 requirements: 
 nodejs is running
 angular cli installed
+make sure run  "ng serve -o" in an Angular project
 
 considerations:
 Used Reactive forms for validation
